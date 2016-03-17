@@ -15,15 +15,19 @@ namespace MVC5Course.Controllers
 
         public ActionResult About()
         {
+            //TODO:ALSFJ;DKJL;
             ViewBag.Message = "Your application description page.";
-
             return View();
         }
 
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
+            return View();
+        }
 
+        public ActionResult test()
+        {
             return View();
         }
     }

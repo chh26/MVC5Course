@@ -1,0 +1,55 @@
+﻿@model IEnumerable<MVC5Course.Models.Product>
+
+@{
+    ViewBag.Title = "ReadProduct";
+}
+
+<h2>ReadProduct</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+    | @Html.ActionLink("all", "ReadProduct")
+    | @Html.ActionLink("有效", "ReadProduct", new { Active = true })
+    | @Html.ActionLink("無效", "ReadProduct", new { Active = false })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ProductName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Price)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Active)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Stock)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink(item.ProductName, "OneProduct", new { Id = item.ProductId})
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Price)
+            [@Html.ActionLink("x2", "UpdateProduct", new { Id = item.ProductId})]
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Active)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Stock)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ProductId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ProductId }) |
+            @Html.ActionLink("Delete", "DeleteProduct", new { id=item.ProductId })
+        </td>
+    </tr>
+}
+
+</table>

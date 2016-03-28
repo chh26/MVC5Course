@@ -10,15 +10,46 @@ using MVC5Course.Models;
 
 namespace MVC5Course.Controllers
 {
-    public class ProductsController : Controller
+    public class ProductsController : BaseController
     {
-        private FabricsEntities db = new FabricsEntities();
-
         // GET: Products
         public ActionResult Index()
         {
-            
-            return View(db.Product.ToList());
+            var data = repoProduct.All().Take(5);
+            return View(data);
+        }
+
+        [HttpPost]
+        public ActionResult Index(IList<BatchUpdateProduct> productList)
+        {
+            // 在 C# 中讀取資料的方式
+            // data[0].Price
+
+            // 原本在 View 顯示的每一筆欄位名稱
+            // item.Price
+            // item.Price
+
+            // 調整為多筆資料繫結可以接到資料的欄位名稱
+            // name="data[0].Price"
+            // name="data[1].Price"
+            if (ModelState.IsValid)
+            {
+                foreach (var item in productList)
+                {
+                    var product = repoProduct.Find(item.ProductId);
+                    product.Price = item.Price;
+                    product.Active = item.Active;
+                    product.Stock = item.Stock;
+                }
+
+                repoProduct.UnitOfWork.Commit();
+
+                return RedirectToAction("Index");
+            }
+
+            ViewData.Model = repoProduct.All().Take(5);
+            return View();
+
         }
 
         // GET: Products/Details/5
@@ -28,7 +59,7 @@ namespace MVC5Course.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product product = db.Product.Find(id);
+            Product product = repoProduct.Find(id.Value);
             if (product == null)
             {
                 return HttpNotFound();
@@ -51,8 +82,8 @@ namespace MVC5Course.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Product.Add(product);
-                db.SaveChanges();
+                repoProduct.Add(product);
+                repoProduct.UnitOfWork.Commit();
                 return RedirectToAction("Index");
             }
 
@@ -66,7 +97,7 @@ namespace MVC5Course.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product product = db.Product.Find(id);
+            Product product = repoProduct.Find(id.Value);
             if (product == null)
             {
                 return HttpNotFound();
@@ -83,8 +114,14 @@ namespace MVC5Course.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(product).State = EntityState.Modified;
-                db.SaveChanges();
+                var dbProduct = repoProduct.UnitOfWork.Context;
+
+                dbProduct.Entry(product).State = EntityState.Modified;
+                dbProduct.SaveChanges();
+
+                TempData["msg"] = product.ProductName + " 更新成功。";
+                //db.Entry(product).State = EntityState.Modified;
+                //db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(product);
@@ -97,7 +134,7 @@ namespace MVC5Course.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product product = db.Product.Find(id);
+            Product product = repoProduct.Find(id.Value);
             if (product == null)
             {
                 return HttpNotFound();
@@ -110,9 +147,36 @@ namespace MVC5Course.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Product product = db.Product.Find(id);
-            db.Product.Remove(product);
-            db.SaveChanges();
+            try
+            {
+                Product product = repoProduct.Find(id);
+
+                repoProduct.Delete(product);
+                repoProduct.UnitOfWork.Commit();
+            }
+            catch (System.Data.Entity.Validation.DbEntityValidationException e)
+            {
+
+                foreach (var entityError in e.EntityValidationErrors)
+                {
+                    foreach (var err in entityError.ValidationErrors)
+                    {
+                        return Content(err.PropertyName + " :" + err.ErrorMessage);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //foreach (var err in ex.)
+                //{
+                //    return Content(err.PropertyName + " :" + err.ErrorMessage);
+                //}
+
+                return Content(ex.InnerException.ToString());
+            }
+            
+            //db.Product.Remove(product);
+            //db.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -120,7 +184,8 @@ namespace MVC5Course.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                repoProduct.UnitOfWork.Context.Dispose();
+                //db.Dispose();
             }
             base.Dispose(disposing);
         }

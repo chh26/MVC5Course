@@ -30,5 +30,21 @@ namespace MVC5Course.Controllers
         {
             return View();
         }
+
+        public ActionResult NewIndex()
+        {
+            return View();
+        }
+
+        [HandleError(ExceptionType = typeof(InvalidOperationException), View = "Error2")]
+        public ActionResult ErrorTest(string name)
+        {
+            if (String.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException("參數錯誤");
+            }
+                throw new InvalidOperationException("操作錯誤");
+            return View();
+        }
     }
 }

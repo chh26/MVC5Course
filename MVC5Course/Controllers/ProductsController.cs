@@ -10,6 +10,8 @@ using MVC5Course.Models;
 
 namespace MVC5Course.Controllers
 {
+    [計算Action執行時間]//動作過濾器，可在執行動作的前後插入事件。
+    [Authorize]
     public class ProductsController : BaseController
     {
         // GET: Products
@@ -110,9 +112,20 @@ namespace MVC5Course.Controllers
         // 詳細資訊，請參閱 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProductId,ProductName,Price,Active,Stock")] Product product)
+        //public ActionResult Edit([Bind(Include = "ProductId,ProductName,Price,Active,Stock")] Product product)
+        //↑為預先驗證，product(model)物件只會包含 Include裡的屬性，
+        //所以當Include裡的屬性action被拿掉時[Bind(Include = "ProductId,ProductName,Price,Stock")
+        //此時product(model)物件裡沒有form回傳的action，
+        //所以product(model)物件裡的action會為預設值false
+        public ActionResult Edit(int id, FormCollection form)
         {
-            if (ModelState.IsValid)
+            //為預防上述資料綁定錯誤，可用
+            //modelview直接綁定form要更新資料
+            //或用TryUpdateModel（這個動作就是在modelbinding）延遲驗證方式，先帶出資料，再直接更新想更新的屬性，
+            //寫法如下。
+            var product = repoProduct.Find(id);
+            if (TryUpdateModel(product, new string[] {
+                "ProductId","ProductName","Price","Active","Stock"}))
             {
                 var dbProduct = repoProduct.UnitOfWork.Context;
 

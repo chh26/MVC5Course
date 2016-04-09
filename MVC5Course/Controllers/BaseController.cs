@@ -12,12 +12,12 @@ namespace MVC5Course.Controllers
         protected ProductRepository repoProduct = 
             RepositoryHelper.GetProductRepository();
 
-        protected override void HandleUnknownAction(string actionName)
-        {
-            //base.HandleUnknownAction(actionName);
-            this.RedirectToAction("Index", "Home")
-                .ExecuteResult(this.ControllerContext);
-        }
+        //protected override void HandleUnknownAction(string actionName)
+        //{
+        //    //base.HandleUnknownAction(actionName);
+        //    this.RedirectToAction("Index", "Home")
+        //        .ExecuteResult(this.ControllerContext);
+        //}
 
     }
 }

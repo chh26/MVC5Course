@@ -26,6 +26,7 @@
                     <li>@Html.ActionLink("關於", "About", "Home")</li>
                     <li>@Html.ActionLink("連絡方式", "Contact", "Home")</li>
                     <li>@Html.ActionLink("測試", "test", "Home")</li>
+                    <li>@Html.ActionLink("產品", "Index", "Products")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
@@ -35,7 +36,10 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - 我的 ASP.NET 應用程式</p>
+            <p>
+                &copy; @DateTime.Now.Year - 我的 ASP.NET 應用程式
+                (Action執行時間：@ViewBag.actionTimeSpen)
+            </p>
         </footer>
     </div>
 

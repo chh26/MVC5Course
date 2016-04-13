@@ -69,6 +69,12 @@ namespace MVC5Course.Controllers
             return View(product);
         }
 
+        public ActionResult OrderLines(int? id)
+        {
+            var OrderLine = repoProduct.Find(id.Value).OrderLine;
+            return PartialView(OrderLine);
+        }
+
         // GET: Products/Create
         public ActionResult Create()
         {

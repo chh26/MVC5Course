@@ -1,0 +1,24 @@
+﻿@model DateTime?
+@using System.Globalization
+
+@if (Model.HasValue)
+{
+    if (Model.Value.Year > 1911)
+    {
+        var tc = new TaiwanCalendar();
+        var datetime = string.Format("民國{0}年{1}月{2}日", tc.GetYear(Model.Value),
+            Model.Value.Month, Model.Value.Day);
+        @Html.Label(datetime)
+    }
+    else
+    {
+        var datetime = string.Format("民國前{0}年{1}月{2}日",-( Model.Value.Year - 1912),
+            Model.Value.Month, Model.Value.Day);
+        @Html.Label(datetime)
+    }
+
+}
+else
+{
+    @Html.Label(Model.Value.ToString())
+}

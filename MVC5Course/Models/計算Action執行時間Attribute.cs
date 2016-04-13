@@ -8,7 +8,7 @@ namespace MVC5Course.Models
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             filterContext.Controller.ViewBag.dtStart = DateTime.Now;
-            base.OnActionExecuting(filterContext);
+             base.OnActionExecuting(filterContext);
         }
 
         public override void OnActionExecuted(ActionExecutedContext filterContext)

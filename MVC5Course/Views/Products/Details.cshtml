@@ -48,3 +48,9 @@
     @Html.ActionLink("Edit", "Edit", new { id = Model.ProductId }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+
+<h2>Partial</h2>
+@Html.Partial("OrderLines", Model.OrderLine)
+
+<h2>Action</h2>
+@Html.Action("OrderLines", new { id = Model.ProductId})

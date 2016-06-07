@@ -76,7 +76,7 @@
             $('.pagination-container a').on('click', function () {
                 //href = "/Clients?page=6"
                 var href = $(this).attr("href");
-                var pid = href.substring(href.indexof('?page=') + 6);
+                var pid = href.substring(href.indexOf('?page=') + 6);
                 document.form1.page.value = pid
                 document.form1.submit();
                 return false;

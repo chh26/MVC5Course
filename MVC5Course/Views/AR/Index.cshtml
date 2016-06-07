@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+<a href="@Url.Action("FileTest")?dl=1">
+    <img src="@Url.Action("FileTest")" alt="Alternate Text" />
+</a>
+<input type="text" name="id" value=" " />
+<button id="btnJsonTest">go</button>
+
+@section Scripts{
+    <script>
+        $('#btnJsonTest').on("click", function (aa) {
+            var pid = $('#id').val();
+            $.get('@Url.Action("JsonTest",new { id= 5 })', "", function (data) {
+                console.log(data);
+                });
+            });
+    </script>
+
+}
+
+
+
